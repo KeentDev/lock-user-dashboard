@@ -1,0 +1,135 @@
+html{
+  scroll-behavior: smooth;
+  font-family: 'Eina03', 'Source Sans Pro', 'Raleway', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #FAFAFA;
+}
+
+body {
+  margin: 0;
+}
+
+.cat-post-cntr {
+  max-width: 642px;
+  width: 100%;
+  height: auto;
+  flex-shrink: 0.5;
+  .space-wrapper{
+    width: 100%;
+  }
+}
+
+.cat-post-thumbnail {
+  width: 100%;
+  background-color: #C4C4C4;
+  flex-shrink: 3;
+  padding-left: 1.5rem;
+  box-sizing: border-box;
+  min-width: 130px;
+}
+
+.post-title {
+  font-weight: 700;
+  font-size: 18px;
+  color: #222;
+}
+
+.post-desc {
+  font-size: 13px;
+  color: #888;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.post-footer {
+  margin-top: 22px;
+}
+
+.cat-post-body {
+  max-width: 350px;
+  width: 100%;
+  min-width: 220px;
+  flex-shrink: 1;
+}
+
+.post-author_category {
+  font-size: 13px;
+  font-weight: 500;
+  color: #222;
+}
+
+.post-info {
+  font-size: 13px;
+  color: #777;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.post-info-time {
+  & > div{
+    &::after{
+      content: '';
+      display: inline-block;
+      height: 7px;
+      width: 1px;
+      background-color: #D1D1D1;
+      margin: 0 .5rem;
+      position: relative;
+    }
+  }
+}
+
+.solid-btn {
+  background-color: $accent--primary;
+  color: white;
+  border: 1px solid $accent--primary;
+  cursor: pointer;
+}
+
+.btn {
+  padding: 10px 32px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  .--guide {
+    font-size: 11px;
+    font-weight: 600; 
+    border-radius: 3px;
+    padding: 2px 5px;
+    position: relative;
+    margin-right: 6px;
+    div {
+      margin-bottom: -1px;
+    }
+  }
+  .cta-label {
+    margin-bottom: -3px;
+    opacity: .75;
+    a {
+      text-decoration: none;
+      color: #333;
+    }
+  }
+  .btn-label {
+    margin-bottom: -4px;
+  }
+}
+
+.ghost-btn {
+  border: 1px solid $accent--primary;
+  color: $accent--primary;
+  .--guide {
+    background-color: #444;
+    color: white;
+  }
+}
+
+.ghost-button--secondary {
+  cursor: pointer;
+}

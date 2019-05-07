@@ -1,0 +1,147 @@
+.row, .col{
+  display: flex;
+}
+
+.row{
+  flex-direction: row;
+  &.series{
+    > * {
+      margin-right: 1rem;
+      &:last-child{
+        margin-right: 0;
+      }
+    }
+  }
+  &.reverse{
+    flex-direction: row-reverse;
+  }
+}
+
+.col{
+  flex-direction: column;
+  &.series{
+    > * {
+      margin-bottom: 1rem;
+      &:last-child{
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.center{
+  justify-content: center;
+  align-items: center;
+}
+
+.x-center{
+  &.row{
+    justify-content: center;
+  }
+  &.col{
+    align-items: center;
+  }
+}
+
+.y-center{
+  &.row{
+    align-items: center;
+  }
+  &.col{
+    justify-content: center;
+  }
+}
+
+.pull-left{
+  width: 100%;
+  &.col{
+    align-items: flex-start;
+  }
+  &.row{
+    justify-content: flex-start;
+  }
+}
+
+.pull-right{
+  &.col{
+    align-items: flex-end;
+  }
+  &.row{
+    justify-content: flex-end;
+  }
+}
+
+.pull-top{
+  &.col{
+    justify-content: flex-start;
+  }
+  &.row{
+    align-items: flex-start;
+  }
+}
+
+.pull-bottom{
+  &.col{
+    justify-content: flex-end;
+  }
+  &.row{
+    align-items: flex-end;
+  }
+}
+
+.distrib-space{
+  &.row{
+    justify-content: space-between;
+  }
+}
+
+.pull-apart{
+  justify-content: space-between;
+}
+
+.stick-right{
+  margin-left: auto;
+}
+
+.stick-left{
+  margin-right: auto;
+}
+
+.stick-top{
+  margin-bottom: auto;
+}
+
+.stick-bottom{
+  margin-top: auto;
+}
+
+.stick-middle{
+  margin: 0 auto;
+}
+
+.hidden.hidden {
+  display: none;
+}
+
+.-wrap{
+  display: inline-flex;
+}
+
+.-card--lvl-hover{
+  border-radius: 4px;
+  box-shadow: 1px 4px 12px -3px rgba(0,0,0,.16), 1px 3px 20px -4px rgba(0,0,0,.09);
+}
+
+.-card--lvl-0{
+  box-shadow: 1px 6px 20px -8px rgba(0,0,0,.08), 1px 3px 34px -3px rgba(0,0,0,.06);
+}
+
+.-card--lvl-1{
+  border-radius: 5px;
+  box-shadow: 1px 6px 28px -26px rgba(0,0,0,.2), 1px 3px 36px -4px rgba(0,0,0,.18);
+}
+
+.-card--lvl-2{
+  border-radius: 15px;
+  box-shadow: 3px 9px 32px -30px rgba(0,0,0,.2), 1px 3px 72px -8px rgba(0,0,0,.2);
+}

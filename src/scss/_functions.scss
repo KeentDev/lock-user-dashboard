@@ -1,0 +1,62 @@
+@mixin series-row($margin){
+  &.--series{
+    > * {
+      margin-right: $margin;
+      &:last-child{
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+@mixin series-col($margin){
+  & > * {
+    margin-bottom: $margin;
+    &:last-child{
+      margin-bottom: 0;
+    }
+  }
+}
+
+// RESPONSIVE MEDIA QUERIES
+
+// Small devices
+@mixin sm {
+  @media (min-width: '576px') {
+      @content;
+  }
+}
+
+@mixin upto-sm {
+  @media (max-width: '576px') {
+      @content;
+  }
+}
+
+// Medium devices
+@mixin md {
+  @media (min-width: #{$screen-md-min}) {
+      @content;
+  }
+}
+
+// Large devices
+@mixin lg {
+  @media (min-width: #{$screen-lg-min}) {
+      @content;
+  }
+}
+
+// Extra large devices
+@mixin xl {
+  @media (min-width: #{$screen-xl-min}) {
+      @content;
+  }
+}
+
+// Custom devices
+@mixin rwd($screen) {
+  @media (min-width: $screen+'px') {
+      @content;
+  }
+}
