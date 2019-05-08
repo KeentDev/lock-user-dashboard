@@ -8,6 +8,7 @@
       transactionType='rent'
       :hours='selectedHours'
       v-on:cancel-payment='offModal()'
+      :confirm-payment='confirmPaymentModal'
     />
     <Card
       :tag="selectedLocation"
@@ -170,6 +171,8 @@ import UnitOption from '@/components/UnitOption.vue'
 import DashboardTile from '@/components/DashboardTile.vue'
 import axios from '@/http-common';
 import PaymentModal from '@/components/PaymentModal.vue'
+import Btn from '@/_helpers/KeyMapper'
+import { parse } from 'path';
 
 export default {
   components: {
@@ -207,7 +210,8 @@ export default {
         invoiceId: '',
         invoiceFeePayment: ''
       },
-      reserveTransaction: false
+      reserveTransaction: false,
+      confirmPaymentModal: false
     }
   },
   computed: {
@@ -283,6 +287,50 @@ export default {
     }
   },
   mounted() {
+
+    let self = this; 
+    
+    window.addEventListener('keyup', function(ev) {
+      if(self.activeOption == 'Location'){
+        if(isNaN(parseInt(ev.key))){
+          if(ev.keyCode == Btn.proceed && typeof self.selectedAreaNum == 'number'){
+            self.activeOption = 'Unit'; 
+            self.getAreaAvailUnits(self.selectedAreaNum);
+          }
+        }else {
+          let inputNumber = parseInt(ev.key);
+          self.selectedAreaNum = inputNumber;
+          self.selectedLocation = self.locationOptions[inputNumber-1].area_location;
+        }
+      }else if(self.activeOption == 'Unit'){
+        if(isNaN(parseInt(ev.key))){
+          if(ev.keyCode == Btn.proceed && typeof self.selectedUnit == 'number'){
+            self.activeOption = 'Hours'; 
+          }
+        }else {
+          self.selectedUnit = parseInt(ev.key);
+        }
+      }else if(self.activeOption == 'Hours'){
+        if(isNaN(parseInt(ev.key))){
+          if(typeof parseInt(self.selectedHours) == 'number'){
+            if(ev.keyCode == Btn.proceed){
+              self.showModal = true;
+            }else if(ev.keyCode == Btn.A){
+              self.reserveUnit();
+            }
+          }
+        }
+      }
+
+      if(self.showModal){
+        if(ev.keyCode == Btn.E){
+          self.confirmPaymentModal = true;
+        }else if(ev.keyCode == Btn.cancel){
+          self.showModal = false;
+        }
+      }
+    });
+
     function getAreaList(that){
       return axios.get('/locker/area-list')
         .then(areaResponse => {
@@ -307,7 +355,7 @@ export default {
         .catch(err => console.error(err));
     }
 
-    axios.all([getAreaList(this), getUserProfile(this)]);
+    axios.all([getAreaList(self), getUserProfile(self)]);
   },
   watch: {
     activeOption(newVal, oldVal) {

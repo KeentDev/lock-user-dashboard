@@ -30,7 +30,7 @@
           </div>
           <div class="payment_input-cntr row center">
             <div class="payment_input row center">
-              <input type="number" name="cointInput" v-model="paymentInput" />
+              <input type="number" name="cointInput" v-model="paymentInput" autofocus=true required/>
               <span class="row center slash">/</span>
               <span>{{paymentDetails.remainingInvoiceFee}}</span>
             </div>
@@ -69,6 +69,7 @@
 import DashboardTile from '@/components/DashboardTile.vue'
 import axios from '@/http-common'
 import CoinFeed from '@/components/CoinFeed.vue'
+import { constants } from 'crypto';
 
 export default {
   data() {
@@ -111,6 +112,10 @@ export default {
     hours: {
       type: null,
       default: 0
+    },
+    confirmPayment: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -119,7 +124,7 @@ export default {
         invoice_id: this.paymentDetails.invoiceId,
         transaction_amount: this.paymentInput
       })
-      .then(res => {
+      .then(async res => {
         let responseData = res.data;
         let invoicePaymentData = responseData.data;
         let isNextSession = false;
@@ -127,8 +132,7 @@ export default {
         if(this.transactionType == 'overdue'){
           isNextSession = true;
         }
-
-        axios.post('/locker/transaction/session', {
+        await axios.post('/locker/transaction/session', {
           auth_activity_log_id: this.transactionInfo.auth_activity_id,
           next_session: isNextSession
         })
@@ -178,12 +182,18 @@ export default {
           })
         })
       }
+    },
+    confirmPayment(newVal, oldVal) {
+      console.log(newVal, oldVal);
+      if(newVal){
+        this.invoicePayment();
+      }
     }
   },
   components: {
     DashboardTile,
     CoinFeed
-  }
+  },
 }
 </script>
 

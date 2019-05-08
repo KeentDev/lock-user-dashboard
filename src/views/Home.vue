@@ -31,7 +31,7 @@ import Card from '@/components/Card.vue'
 import DashboardCard from '@/components/DashboardCard.vue'
 import axios from '@/http-common';
 import helper from '@/_helpers/textManipulation';
-import { constants } from 'crypto';
+import Btn from '@/_helpers/KeyMapper'
 
 export default {
   data () {
@@ -40,7 +40,7 @@ export default {
       cardTag: '',
       cardHead: '',
       cardMeta: '',
-      isOverdue: false
+      isOverdue: false,
     }
   },
   components: {
@@ -48,6 +48,17 @@ export default {
     DashboardCard
   },
   mounted () {
+    let self = this; 
+    
+    window.addEventListener('keyup', function(ev) {
+      if(!self.hasRental){
+        ev.keyCode == Btn.proceed ? self.$router.push('/rental') : null;
+        ev.keyCode == Btn.A ? self.$router.push('/unit') : null;
+      }else{
+        ev.keyCode == Btn.proceed ? self.$router.push('/unit') : null;
+      }
+    });
+
     axios.get('user/profile')
       .then(res => {
         let response = res.data;
@@ -55,18 +66,18 @@ export default {
         let hasRental = false;
         let timeLeft = helper.epochToHumanTime(helper.getTimeLeft(rental.end));
 
-        this.cardMeta = timeLeft.sentence;
-        this.isOverdue = timeLeft.isOverdue;
+        self.cardMeta = timeLeft.sentence;
+        self.isOverdue = timeLeft.isOverdue;
 
         if(response.success) {
           hasRental = rental.hasRental;
-          this.hasRental = hasRental;
+          self.hasRental = hasRental;
           if(hasRental){
-            this.cardTag = rental.unit_area_location;
-            this.cardHead = `#${rental.unit_num}`;
+            self.cardTag = rental.unit_area_location;
+            self.cardHead = `#${rental.unit_num}`;
           }else {
             let fullName = `${response.data.first_name} ${response.data.last_name}`;
-            this.cardTag = fullName;
+            self.cardTag = fullName;
           }
         }else {
           console.error('Something went wrong.');

@@ -137,7 +137,6 @@
         <div class="card-cta" @click="endOption()">END RENTAL</div>
       </div>
     </div>
-    
     <div class="col center">
       <div class="dashboard-tile-cntr row center --series">
         <DashboardTile 
@@ -246,10 +245,19 @@ export default {
             let rentalStart = rental.start;
             let startHourFormatObj = helper.transformHoursMinutesFormat(rentalStart);
             let endHourFormatObj = helper.transformHoursMinutesFormat(rentalEnd);
-            let timeLeft = helper.epochToHumanTime(helper.getTimeLeft(rentalEnd));
+            let timeDiff = helper.getTimeLeft(rentalEnd);
+            let timeLeft = helper.epochToHumanTime(timeDiff);
             let hasReservation = rental.hasReservation;
 
-            that.hasReservation = hasReservation;
+            if(timeDiff > 0){
+              that.hasReservation = hasReservation;
+            }else {
+              console.log(timeDiff, that.hasReservation);
+              if(that.hasReservation){
+                that.hasReservation = false;
+                that.isOverdue = false;
+              }
+            }
 
             that.startTimeFormat = startHourFormatObj.format;
             that.startTimeMeridiem = startHourFormatObj.meridiem;

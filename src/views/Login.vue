@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import Btn from '@/_helpers/KeyMapper'
+
 export default {
   data() {
     return {
@@ -45,6 +47,19 @@ export default {
           console.error(err);
         })
     }
+  },
+  mounted() {
+    let self = this; 
+
+    window.addEventListener('keyup', function(ev) {
+      console.log(ev.keyCode);
+     if( ev.keyCode == Btn.proceed){
+      //  window.removeEventListener('keyup', );
+      //  window.removeEventListener('keyup', true);
+       self.login();
+     }
+      ev.keyCode == Btn.cancel ? console.log('cancel') : null;
+    });
   }
 }
 </script>
