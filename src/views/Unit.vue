@@ -1,7 +1,7 @@
 <template>
   <div class="unit-view col center">
     <PaymentModal 
-      :show-payment-modal='showModal'
+      v-if="showModal"
       :title='isOverdue ? "Overdue" : "Extend"'
       :user-balance='userBalance'
       :unit-num='unitNum'

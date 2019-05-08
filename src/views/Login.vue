@@ -1,5 +1,5 @@
 <template>
-  <div class="login-cntr col">
+  <div class="login-cntr col" ref='loginCntr'>
     <div class="content">
       <div class="head col center">
         <span>LOGIN</span>
@@ -51,15 +51,15 @@ export default {
   mounted() {
     let self = this; 
 
-    window.addEventListener('keyup', function(ev) {
-      console.log(ev.keyCode);
-     if( ev.keyCode == Btn.proceed){
-      //  window.removeEventListener('keyup', );
-      //  window.removeEventListener('keyup', true);
-       self.login();
-     }
+    function checkKey(ev) {
+      if( ev.keyCode == Btn.proceed){
+        window.removeEventListener('keyup', checkKey);
+        self.login();
+      }
       ev.keyCode == Btn.cancel ? console.log('cancel') : null;
-    });
+    }
+
+    window.addEventListener('keyup', checkKey);
   }
 }
 </script>

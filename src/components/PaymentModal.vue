@@ -1,5 +1,5 @@
 <template>
-  <div class="transaction_payment-modal-cntr" v-show="showPaymentModal">
+  <div class="transaction_payment-modal-cntr" ref='paymentModal'>
     <div class="transaction_payment-modal col pull-apart">
       <div class="modal-content col">
         <div class="modal-head">
@@ -30,7 +30,7 @@
           </div>
           <div class="payment_input-cntr row center">
             <div class="payment_input row center">
-              <input type="number" name="cointInput" v-model="paymentInput" autofocus=true required/>
+              <input id='payment' type="number" name="cointInput" v-model="paymentInput" autofocus=true ref="amountInput" required/>
               <span class="row center slash">/</span>
               <span>{{paymentDetails.remainingInvoiceFee}}</span>
             </div>
@@ -69,7 +69,7 @@
 import DashboardTile from '@/components/DashboardTile.vue'
 import axios from '@/http-common'
 import CoinFeed from '@/components/CoinFeed.vue'
-import { constants } from 'crypto';
+import Btn from '@/_helpers/KeyMapper'
 
 export default {
   data() {
@@ -119,6 +119,14 @@ export default {
     }
   },
   methods: {
+    checkKey(ev) {
+      if(isNaN(parseInt(ev.key))){
+        if(ev.keyCode == Btn.proceed){
+          this.invoicePayment();
+          self.$emit("cancel-payment");
+        }
+      }
+    },
     invoicePayment() {
       axios.post('/locker/transaction/authenticate', {
         invoice_id: this.paymentDetails.invoiceId,
@@ -139,8 +147,8 @@ export default {
         .then(res => {
           let responseData = res.data;
           let sessionAuth = responseData.data;
-          console.log(responseData);
           if(responseData.success){
+            window.removeEventListener('keyup', this.checkKey);
             this.$emit('refresh-data'); 
             this.$emit('cancel-payment');
             if(this.transactionType == 'overdue'){
@@ -154,33 +162,18 @@ export default {
           }
         })
       })
-    }
+    },
+    
   },
   watch: {
     showPaymentModal(newVal, oldVal) {
       if(newVal == true){
-        axios.post('/locker/transaction/authorization', {
-          unit_num: this.unitNum,
-          transaction_type: this.transactionType,
-        })
-        .then(res => {
-          let responseData = res.data;
+        
+      }else {
+        let paymentModalRef = this.$refs.paymentModal;
+        let self = this;
 
-          return Promise.resolve(this.transactionInfo.auth_activity_id = responseData.data.auth_activity_id)
-        })
-        .then(activityId => {
-          axios.post('/locker/transaction/invoice', {
-            auth_activity_id: activityId,
-            hours: this.hours
-          })
-          .then(res => {
-            let responseData = res.data;
-            let invoiceData = responseData.data;
-
-            this.paymentDetails.remainingInvoiceFee = invoiceData.fee;
-            this.paymentDetails.invoiceId = invoiceData.invoice_id;
-          })
-        })
+        window.removeEventListener('keyup', self.checkKey);
       }
     },
     confirmPayment(newVal, oldVal) {
@@ -194,6 +187,40 @@ export default {
     DashboardTile,
     CoinFeed
   },
+  mounted() {
+    let paymentModalRef = this.$refs.paymentModal;
+
+    let self = this;
+
+    paymentModalRef.addEventListener('keyup', self.checkKey);
+
+    this.$refs.amountInput.focus();
+    
+    self.paymentInput = 0;
+  
+    axios.post('/locker/transaction/authorization', {
+      unit_num: this.unitNum,
+      transaction_type: this.transactionType,
+    })
+    .then(res => {
+      let responseData = res.data;
+
+      return Promise.resolve(this.transactionInfo.auth_activity_id = responseData.data.auth_activity_id)
+    })
+    .then(activityId => {
+      axios.post('/locker/transaction/invoice', {
+        auth_activity_id: activityId,
+        hours: this.hours
+      })
+      .then(res => {
+        let responseData = res.data;
+        let invoiceData = responseData.data;
+        
+        this.paymentDetails.remainingInvoiceFee = invoiceData.fee;
+        this.paymentDetails.invoiceId = invoiceData.invoice_id;
+      })
+    })
+  }
 }
 </script>
 

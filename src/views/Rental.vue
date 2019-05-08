@@ -1,7 +1,6 @@
 <template>
   <section class="container row x-center pull-top">
     <PaymentModal 
-      :show-payment-modal='showModal'
       title='Rent'
       :user-balance='paymentDetails.userBalance'
       :unit-num='selectedUnit'
@@ -9,6 +8,7 @@
       :hours='selectedHours'
       v-on:cancel-payment='offModal()'
       :confirm-payment='confirmPaymentModal'
+      v-if="showModal"
     />
     <Card
       :tag="selectedLocation"
@@ -290,7 +290,7 @@ export default {
 
     let self = this; 
     
-    window.addEventListener('keyup', function(ev) {
+    function checkKey(ev) {
       if(self.activeOption == 'Location'){
         if(isNaN(parseInt(ev.key))){
           if(ev.keyCode == Btn.proceed && typeof self.selectedAreaNum == 'number'){
@@ -314,8 +314,11 @@ export default {
         if(isNaN(parseInt(ev.key))){
           if(typeof parseInt(self.selectedHours) == 'number'){
             if(ev.keyCode == Btn.proceed){
+              window.removeEventListener('keyup', checkKey);
+              // self.$refs.hoursInput.blur();
               self.showModal = true;
             }else if(ev.keyCode == Btn.A){
+              window.removeEventListener('keyup', checkKey);
               self.reserveUnit();
             }
           }
@@ -329,7 +332,9 @@ export default {
           self.showModal = false;
         }
       }
-    });
+    }
+
+    window.addEventListener('keyup', checkKey);
 
     function getAreaList(that){
       return axios.get('/locker/area-list')
